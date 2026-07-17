@@ -34,7 +34,7 @@
 
             @empty
                 <x-card>
-                    <p>No Ideas at this time</p>
+                    <p>No Ideas at this time!</p>
                 </x-card>
             @endforelse
         </div>
