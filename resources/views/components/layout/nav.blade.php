@@ -1,7 +1,7 @@
 <nav class="border-b border-border px-6">
     <div class="max-w-7xl mx-auto h-16 flex items-center justify-between">
         <div>
-            <a href="">
+            <a href="" class="">
                 <img src="/images/ATMS-logo2b.webp" alt="Idea Logo" width="200">
             </a>
         </div>
