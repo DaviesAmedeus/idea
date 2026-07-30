@@ -28,6 +28,12 @@
             <div class="grid md:grid-cols-2 gap-6">
                 @forelse ($ideas as $idea)
                     <x-card href="{{ route('idea.show', $idea) }}">
+                        @if($idea->image_path)
+
+                <div class="mb-4 -mx-4 -mt-4 rounded-t-lg overflow-hidden ">
+                    <img src="{{ asset('storage/'.$idea->image_path) }}" alt="" class="w-full h-48 object-cover">
+                </div>
+            @endif
                         <h3 class="text-foreground text-lg">{{ $idea->title }}</h3>
                         <div class="mt-1">
                             <x-idea.status-label status="{{ $idea->status }}">
@@ -49,25 +55,30 @@
 
         <!-- Modal -->
         <x-modal name="create-idea" title="New Idea">
-            <form x-data="{
+            <form 
+                x-data="{
                 status: 'pending',
                 newLink: '',
                 links: [],
                 newStep:'',
                 steps: []
-            
-            
-            }" method="POST" action="{{ route('idea.store') }}">
+                }" 
+                 method="POST" 
+                 action="{{ route('idea.store') }}"
+                 enctype="multipart/form-data">
+
                 @csrf
 
                 <div class="space-y-6">
-                    <x-form.field label="Title" name="title" placeholder="Enter an idea for your title" autofocus
+                    <x-form.field 
+                        label="Title" 
+                        name="title" 
+                        placeholder="Enter an idea for your title" 
+                        autofocus
                         required />
 
                     <div class="space-y-2">
-
                         <label for="status" class="status">Status</label>
-
                         <div class="flex gap-x-3 mt-2">
                             @foreach (App\IdeaStatus::cases() as $status)
                                 <button type="button" @click="status = @js($status->value)"
@@ -76,31 +87,37 @@
                                     {{ $status->label() }}
                                 </button>
                             @endforeach
-
-
                             <input type="hidden" name="status" :value="status">
                         </div>
-
 
                         <x-form.error name="status" />
                     </div>
 
-                    <x-form.field label="Description" name="description" type="textarea"
-                        placeholder="Describe your idea..." autofocus />
+                    <x-form.field 
+                        label="Description" 
+                        name="description" 
+                        type="textarea"
+                        placeholder="Describe your idea..." 
+                        autofocus />
 
-                        <div>
+                    <div class="space-y-2">
+                        <label for="iamge" class="label">Featured Image</label>
+                        <input type="file" name="image" accept="image/*">
+                        <x-form.error name="image" />
+                    </div>
+
+                    <div>
                         <fieldset class="space-y-3">
                             <legend class="label">Actionable Steps</legend>
-
                             <template x-for="(step, index) in steps" :key="step">
                                 <div class="flex gap-x-2 items-center">
                                 <input name="steps[]" x-model="step" class="input" readonly>
-                                <button type="button"
-                                    aria-label="Remove step"
-                                    @click="steps.splice(index,1)"
-                                    class="form-muted-icon">
-                                    <x-icons.close />
-                                </button>
+                                    <button type="button"
+                                        aria-label="Remove step"
+                                        @click="steps.splice(index,1)"
+                                        class="form-muted-icon">
+                                        <x-icons.close />
+                                    </button>
                                 </div>
                             </template>
 
