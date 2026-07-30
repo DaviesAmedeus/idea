@@ -29,24 +29,49 @@
                 <div class="text-muted-foreground text-sm">{{ $idea->created_at->diffForHumans() }}</div>
             </div>
 
-    <x-card class="mt-6">
-        <div class="text-foreground  max-w-none cursor-pointer">{{ $idea->description }}</div>
-    </x-card>
+            <x-card class="mt-6">
+                <div class="text-foreground  max-w-none cursor-pointer">{{ $idea->description }}</div>
+            </x-card>
 
-    @if ($idea->links)
-    <div>
-        <h3 class="font-bold text-xl mt-6">Links</h3>
-    </div>
+              @if ($idea->steps->count())
+                <div>
+                    <h3 class="font-bold text-xl mt-6">Actionable Steps</h3>
+                </div>
 
-    <div class="mt-3 space-y-2">
-        @foreach ($idea->links as $link )
+                <div class="mt-3 space-y-2">
+                    @foreach ($idea->steps as $step)
+                        <x-card class="font-medium flex gap-x-3 items-center">
+                          <form method="POST" action="{{ route('step.update', $step) }}">
+                            @csrf
+                            @method('PATCH')
 
-    <x-card :href="$link" class="text-primary font-medium flex gap-x-3 items-center"> <x-icons.external />{{ $link }}</x-card>
+                            <div class="flex items-center gap-x-3">
+                            <button type="submit" role="checkbox" class="size-5 flex items-center justify-center rounded-lg text-primary-foreground {{ $step->completed ? 'bg-primary' : 'border border-primary' }}">&check;</button>
+                            <span class="{{ $step->completed ? 'line-through text-muted-foreground' : '' }}">{{ $step->description }}</span>
+                          </div>
+                          </form>
 
-    @endforeach
-    </div>
+                        </x-card>
+                    @endforeach
+                </div>
 
-    @endif
+            @endif
+
+
+
+            @if ($idea->links->count())
+                <div>
+                    <h3 class="font-bold text-xl mt-6">Links</h3>
+                </div>
+
+                <div class="mt-3 space-y-2">
+                    @foreach ($idea->links as $link)
+                        <x-card :href="$link" class="text-primary font-medium flex gap-x-3 items-center">
+                            <x-icons.external />{{ $link }}</x-card>
+                    @endforeach
+                </div>
+
+            @endif
 
         </div>
     </div>
